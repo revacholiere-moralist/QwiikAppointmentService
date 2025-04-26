@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QwiikAppointmentService.Application.Repositories;
 using QwiikAppointmentService.Domain.Common;
+using QwiikAppointmentService.Domain.Entities;
 using QwiikAppointmentService.EfPostgreSQL.Context;
 
 namespace QwiikAppointmentService.EfPostgreSQL.Repositories
@@ -17,13 +18,21 @@ namespace QwiikAppointmentService.EfPostgreSQL.Repositories
 
         public virtual Task<List<TEntity>> GetAll(CancellationToken cancellationToken)
         {
-            return Context.Query<TEntity>().ToListAsync(cancellationToken);
+            return Context.Query<TEntity>()
+                .Where(x => !x.IsActive)
+                .ToListAsync(cancellationToken);
         }
 
-        public virtual Task<TEntity> Get(int id, CancellationToken cancellationToken)
+        public virtual Task<TEntity?> Get(int id, CancellationToken cancellationToken)
         {
             var result = Context.Get<TEntity>(id);
-            return Task.FromResult(result);
+            
+            if (result.IsActive)
+            {
+                return Task.FromResult<TEntity?>(result);
+            }
+            return Task.FromResult<TEntity?>(null);
+
         }
 
         public virtual void Create(TEntity entity)

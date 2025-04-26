@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.CreateAppointment
+namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.UpdateAppointment
 {
-    public class CreateAppointmentValidator : AbstractValidator<CreateAppointment>
+    public class UpdateAppointmentValidator : AbstractValidator<UpdateAppointment>
     {
-        public CreateAppointmentValidator()
+        public UpdateAppointmentValidator()
         {
             RuleFor(x => x).NotNull().NotEmpty();
             RuleFor(x => x.Request.CustomerId).NotEmpty().NotNull();

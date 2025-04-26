@@ -17,6 +17,9 @@ namespace QwiikAppointmentService.EfPostgreSQL
         public static void ConfigureRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
     }
 }

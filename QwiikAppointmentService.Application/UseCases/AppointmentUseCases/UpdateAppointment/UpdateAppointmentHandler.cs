@@ -3,16 +3,15 @@ using QwiikAppointmentService.Application.Exceptions;
 using QwiikAppointmentService.Application.Repositories;
 using QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Common;
 using QwiikAppointmentService.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.CreateAppointment
+namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.UpdateAppointment
 {
-    public class CreateAppointmentHandler : IRequestHandler<CreateAppointment, AppointmentResponseType>
+    public class UpdateAppointmentHandler : IRequestHandler<UpdateAppointment, AppointmentResponseType>
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public CreateAppointmentHandler(IAppointmentRepository appointmentRepository, 
+        public UpdateAppointmentHandler(IAppointmentRepository appointmentRepository,
                                          ICustomerRepository customerRepository,
                                          IUnitOfWork unitOfWork)
         {
@@ -21,7 +20,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<AppointmentResponseType> Handle(CreateAppointment request, CancellationToken cancellationToken)
+        public async Task<AppointmentResponseType> Handle(UpdateAppointment request, CancellationToken cancellationToken)
         {
             // strip the second part if any
             var appointmentStartTime = request.Request.AppointmentStart.Date + new TimeSpan(request.Request.AppointmentStart.TimeOfDay.Hours, request.Request.AppointmentStart.TimeOfDay.Minutes, 0);
@@ -38,32 +37,32 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
                 throw new NotFoundException("Please enter a valid customer.");
             }
 
-            var existingAppointment = await _appointmentRepository.GetAppointmentByStartTime(appointmentStartTime, cancellationToken);
-            if (existingAppointment is not null)
+            var existingAppointment = await _appointmentRepository.Get(request.Request.AppointmentId, cancellationToken);
+            if (existingAppointment is null)
+            {
+                throw new NotFoundException("Appointment not found.");
+            }
+
+            var otherExistingAppointment = await _appointmentRepository.GetAppointmentByStartTime(appointmentStartTime, cancellationToken);
+            if (otherExistingAppointment is not null)
             {
                 throw new BadRequestException("Another appointment already exists on the requested time.");
             }
 
-            // valid to add appointment, proceed to insert to db
+            // valid to add appointment, proceed to update db
 
             // let's assume each appointment will take an hour slot
             var appointmentTimeEnd = appointmentStartTime.AddHours(1);
             DateTime.SpecifyKind(appointmentTimeEnd, DateTimeKind.Utc);
-            var appointment = new Appointment
-            {
-                CustomerId = request.Request.CustomerId,
-                AppointmentDateTimeStart = appointmentStartTime,
-                AppointmentDateTimeEnd = appointmentTimeEnd,
-                CreatedById = request.Request.CustomerId,
-                LastUpdatedById = request.Request.CustomerId,
-                CreatedDate = DateTime.UtcNow,
-                LastUpdatedDate = DateTime.UtcNow,
-                IsActive = true
-            };
+
+            existingAppointment.AppointmentDateTimeStart = appointmentStartTime;
+            existingAppointment.AppointmentDateTimeEnd = appointmentTimeEnd;
+            existingAppointment.LastUpdatedDate = DateTime.UtcNow;
+            existingAppointment.LastUpdatedById = customer.PersonId;
 
             try
             {
-                _appointmentRepository.Create(appointment);
+                _appointmentRepository.Update(existingAppointment);
                 await _unitOfWork.Save(cancellationToken);
             }
             catch (Exception ex)
@@ -71,24 +70,23 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
                 // TODO: Maybe add logging here
                 throw new InternalServerErrorException("Unable to create appointment.");
             }
-            
 
-            var insertedAppointment = await _appointmentRepository.Get(appointment.AppointmentId, cancellationToken);
-            if (insertedAppointment is null)
+
+            var updatedAppointment = await _appointmentRepository.Get(request.Request.AppointmentId, cancellationToken);
+            if (updatedAppointment is null)
             {
-                throw new NotFoundException("Unable to retrieve the inserted appointment.");
+                throw new NotFoundException("Unable to retrieve the updated appointment.");
             }
 
             var response = new AppointmentResponseType
             {
-                AppointmentId = insertedAppointment.AppointmentId,
-                CustomerId = insertedAppointment.CustomerId,
-                AppointmentStartTime = insertedAppointment.AppointmentDateTimeStart,
-                AppointmentEndTime = insertedAppointment.AppointmentDateTimeEnd
+                AppointmentId = updatedAppointment.AppointmentId,
+                CustomerId = updatedAppointment.CustomerId,
+                AppointmentStartTime = updatedAppointment.AppointmentDateTimeStart,
+                AppointmentEndTime = updatedAppointment.AppointmentDateTimeEnd
             };
 
             return response;
         }
     }
-
 }

@@ -3,6 +3,9 @@
     public class BadRequestException : Exception
     {
         public string[] Errors { get; set; }
+        public BadRequestException(string message) : base(message)
+        {
+        }
         public BadRequestException(string message, string[] errors) : base(message)
         {
             Errors = errors;

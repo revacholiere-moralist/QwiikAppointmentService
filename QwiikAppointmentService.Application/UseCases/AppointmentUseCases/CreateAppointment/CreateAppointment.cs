@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Common;
 
 namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.CreateAppointment
 {
-    internal class CreateAppointment
-    {
-    }
+    public record CreateAppointment(CreateAppointmentRequestType Request) : IRequest<AppointmentResponseType>;
 }

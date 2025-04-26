@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.CreateAppointment
+﻿namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.CreateAppointment
 {
-    internal class CreateAppointmentRequestType
+    public class CreateAppointmentRequestType
     {
+        public required int CustomerId { get; set; }
+        public required DateTime AppointmentStart { get; set; }
     }
 }

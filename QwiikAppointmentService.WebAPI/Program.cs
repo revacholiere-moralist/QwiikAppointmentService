@@ -1,3 +1,4 @@
+using Evercare.HealthrecordService.WebApi.Configurations;
 using QwiikAppointmentService.Application;
 using QwiikAppointmentService.EfPostgreSQL;
 using QwiikAppointmentService.WebAPI.Configurations;
@@ -25,6 +26,7 @@ var app = builder.Build();
 
 app.UseVersionedSwagger();
 app.UseCors();
+app.UseErrorHandler();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
