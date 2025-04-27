@@ -27,7 +27,7 @@ namespace QwiikAppointmentService.EfPostgreSQL.Repositories
         {
             var result = Context.Get<TEntity>(id);
             
-            if (result.IsActive)
+            if (result is not null && result.IsActive)
             {
                 return Task.FromResult<TEntity?>(result);
             }

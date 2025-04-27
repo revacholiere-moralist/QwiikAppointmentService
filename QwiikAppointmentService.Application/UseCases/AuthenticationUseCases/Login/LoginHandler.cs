@@ -76,7 +76,8 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Lo
             var claims = new List<Claim>
             {
                 new(ClaimType.UserId, user.Id),
-                new(ClaimType.UserName, user.UserName)
+                new(ClaimType.UserName, user.UserName),
+                new(ClaimType.PersonId, user.PersonId.ToString())
             };
             var roles = await _identityManager.UserManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimType.Role, role)));

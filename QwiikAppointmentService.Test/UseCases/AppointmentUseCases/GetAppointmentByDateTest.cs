@@ -17,6 +17,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var personRepository = new Mock<IPersonRepository>();
 
             var mockedCustomerResponse = new Customer()
             {
@@ -77,7 +78,8 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
 
             var handler = new GetAppointmentsByDateHandler(
                 appointmentRepository.Object,
-                customerRepository.Object);
+                customerRepository.Object,
+                personRepository.Object);
 
             var requestObject = new GetAppointmentsByDateRequestType
             {
@@ -121,6 +123,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var personRepository = new Mock<IPersonRepository>();
 
             var mockedCustomerResponse = new Customer()
             {
@@ -181,7 +184,8 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
 
             var handler = new GetAppointmentsByDateHandler(
                 appointmentRepository.Object,
-                customerRepository.Object);
+                customerRepository.Object,
+                personRepository.Object);
 
             var requestObject = new GetAppointmentsByDateRequestType
             {
@@ -217,7 +221,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
-
+            var personRepository = new Mock<IPersonRepository>();
 
             var mockedAppointmentsResponse = new List<Appointment>();
 
@@ -262,7 +266,8 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
 
             var handler = new GetAppointmentsByDateHandler(
                 appointmentRepository.Object,
-                customerRepository.Object);
+                customerRepository.Object,
+                personRepository.Object);
 
             var requestObject = new GetAppointmentsByDateRequestType
             {

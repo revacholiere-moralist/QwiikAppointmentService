@@ -10,11 +10,14 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.GetAp
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IPersonRepository _personRepository;
         public GetAppointmentsByDateHandler(IAppointmentRepository appointmentRepository,
-                                         ICustomerRepository customerRepository)
+                                         ICustomerRepository customerRepository,
+                                         IPersonRepository personRepository)
         {
             _appointmentRepository = appointmentRepository;
             _customerRepository = customerRepository;
+            _personRepository = personRepository;
         }
 
         public async Task<List<AppointmentResponseType>> Handle(GetAppointmentsByDate request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.GetAp
             var appointments = await _appointmentRepository.GetAppointmentsByDate(request.Request.AppointmentDateFilterStart, request.Request.AppointmentDateFilterEnd, cancellationToken);
 
             // if this request was made by a customer, check if the customer is valid and get the appointments for that customer only
-            if (request.Request.CustomerId.HasValue)
+            if (request.Request.CustomerId.HasValue && request.Request.CustomerId != 0)
             {
                 var customer = await _customerRepository.Get(request.Request.CustomerId.Value, cancellationToken);
                 if (customer is null)

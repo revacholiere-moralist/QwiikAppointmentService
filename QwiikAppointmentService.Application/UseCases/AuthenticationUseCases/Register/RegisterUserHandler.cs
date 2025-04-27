@@ -11,15 +11,18 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Re
     {
         private readonly IPersonRepository _personRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IdentityManager _identityManager;
         public RegisterUserHandler(IPersonRepository personRepository,
                                     ICustomerRepository customerRepository,
+                                    IUserRepository userRepository,
                                     IUnitOfWork unitOfWork,
                                     IdentityManager identityManager)
         {
             _personRepository = personRepository;
             _customerRepository = customerRepository;
+            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _identityManager = identityManager;
         }
@@ -74,6 +77,12 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Re
             _customerRepository.Create(customer);
 
             await _unitOfWork.Save(cancellationToken);
+
+            // update user table with the newly created personId
+            user.PersonId = customer.PersonId;
+            _userRepository.Update(user, cancellationToken);
+            await _unitOfWork.Save(cancellationToken);
+
             return response;
         }
     }

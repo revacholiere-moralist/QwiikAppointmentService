@@ -23,6 +23,7 @@ namespace QwiikAppointmentService.EfPostgreSQL
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
