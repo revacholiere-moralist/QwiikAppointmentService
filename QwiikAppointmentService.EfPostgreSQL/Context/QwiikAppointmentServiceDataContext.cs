@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QwiikAppointmentService.Domain.Common;
 using QwiikAppointmentService.Domain.Entities;
 using System.Reflection;
 
 namespace QwiikAppointmentService.EfPostgreSQL.Context
 {
-    public class QwiikAppointmentServiceDataContext : DbContext
+    public class QwiikAppointmentServiceDataContext : IdentityDbContext
     {
         public QwiikAppointmentServiceDataContext(DbContextOptions<QwiikAppointmentServiceDataContext> options) : base(options)
         {
@@ -14,6 +15,7 @@ namespace QwiikAppointmentService.EfPostgreSQL.Context
         public DbSet<Person> Person { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<User> User { get; set; }
 
         public IQueryable<TEntity> Query<TEntity>() where TEntity : BaseEntity
         {

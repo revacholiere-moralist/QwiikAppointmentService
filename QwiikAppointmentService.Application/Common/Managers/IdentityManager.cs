@@ -7,13 +7,15 @@ namespace QwiikAppointmentService.Application.Common.Managers
     {
         public UserManager<User> UserManager { get; }
         public RoleManager<Role> RoleManager { get; }
-
+        public SignInManager<User> SignInManager { get; }
         public IdentityManager(
             UserManager<User> userManager,
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager,
+            SignInManager<User> signInManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
+            SignInManager = signInManager;
         }
     }
 }

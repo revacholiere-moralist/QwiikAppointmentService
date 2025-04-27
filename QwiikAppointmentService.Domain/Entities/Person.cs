@@ -4,7 +4,7 @@ namespace QwiikAppointmentService.Domain.Entities
 {
     public class Person : BaseEntity
     {
-        public required int PersonId { get; set; }
+        public int PersonId { get; set; }
         public required string Username { get; set; }
         public required string Email { get; set; }
         public required string FirstName { get; set; }

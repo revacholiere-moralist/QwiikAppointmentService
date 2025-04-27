@@ -23,7 +23,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Updat
         public async Task<AppointmentResponseType> Handle(UpdateAppointment request, CancellationToken cancellationToken)
         {
             // strip the second part if any
-            var appointmentStartTime = request.Request.AppointmentStart.Date + new TimeSpan(request.Request.AppointmentStart.TimeOfDay.Hours, request.Request.AppointmentStart.TimeOfDay.Minutes, 0);
+            var appointmentStartTime = request.Request.AppointmentStart.Date + new TimeSpan(request.Request.AppointmentStart.TimeOfDay.Hours, 0, 0);
             DateTime.SpecifyKind(appointmentStartTime, DateTimeKind.Utc);
 
             if (request.Request.AppointmentStart < DateTime.UtcNow)
@@ -76,18 +76,12 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Updat
             }
 
 
-            var updatedAppointment = await _appointmentRepository.Get(request.Request.AppointmentId, cancellationToken);
-            if (updatedAppointment is null)
-            {
-                throw new NotFoundException("Unable to retrieve the updated appointment.");
-            }
-
             var response = new AppointmentResponseType
             {
-                AppointmentId = updatedAppointment.AppointmentId,
-                CustomerId = updatedAppointment.CustomerId,
-                AppointmentStartTime = updatedAppointment.AppointmentDateTimeStart,
-                AppointmentEndTime = updatedAppointment.AppointmentDateTimeEnd
+                AppointmentId = existingAppointment.AppointmentId,
+                CustomerId = existingAppointment.CustomerId,
+                AppointmentStartTime = existingAppointment.AppointmentDateTimeStart,
+                AppointmentEndTime = existingAppointment.AppointmentDateTimeEnd
             };
 
             return response;

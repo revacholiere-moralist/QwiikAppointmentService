@@ -73,18 +73,12 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
             }
             
 
-            var insertedAppointment = await _appointmentRepository.Get(appointment.AppointmentId, cancellationToken);
-            if (insertedAppointment is null)
-            {
-                throw new NotFoundException("Unable to retrieve the inserted appointment.");
-            }
-
             var response = new AppointmentResponseType
             {
-                AppointmentId = insertedAppointment.AppointmentId,
-                CustomerId = insertedAppointment.CustomerId,
-                AppointmentStartTime = insertedAppointment.AppointmentDateTimeStart,
-                AppointmentEndTime = insertedAppointment.AppointmentDateTimeEnd
+                AppointmentId = appointment.AppointmentId,
+                CustomerId = appointment.CustomerId,
+                AppointmentStartTime = appointment.AppointmentDateTimeStart,
+                AppointmentEndTime = appointment.AppointmentDateTimeEnd
             };
 
             return response;

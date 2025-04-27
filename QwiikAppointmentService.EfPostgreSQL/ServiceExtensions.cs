@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using QwiikAppointmentService.Application.Repositories;
+using QwiikAppointmentService.Domain.Entities;
 using QwiikAppointmentService.EfPostgreSQL.Context;
 using QwiikAppointmentService.EfPostgreSQL.Repositories;
 
@@ -20,6 +22,22 @@ namespace QwiikAppointmentService.EfPostgreSQL
 
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<QwiikAppointmentServiceDataContext>()
+                .AddDefaultTokenProviders();
         }
     }
 }
