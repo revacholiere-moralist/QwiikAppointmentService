@@ -4,6 +4,7 @@ using QwiikAppointmentService.Application.Exceptions;
 using QwiikAppointmentService.Application.Repositories;
 using QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Common;
 using QwiikAppointmentService.Domain.Entities;
+using System.Transactions;
 
 namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Register
 {
@@ -30,60 +31,65 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Re
         public async Task<UserResponseType> Handle(RegisterUser request, CancellationToken cancellationToken)
         {
             // register to aspnetuser
-            var user = new User
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                FirstName = request.Request.FirstName,
-                LastName = request.Request.LastName,
-                UserName = request.Request.Username,
-                Email = request.Request.Email
-            };
-            user.EmailConfirmed = true;
-            var result = await _identityManager.UserManager.CreateAsync(user, request.Request.Password);
+                var user = new User
+                {
+                    FirstName = request.Request.FirstName,
+                    LastName = request.Request.LastName,
+                    UserName = request.Request.Username,
+                    Email = request.Request.Email
+                };
+                user.EmailConfirmed = true;
+                var result = await _identityManager.UserManager.CreateAsync(user, request.Request.Password);
 
-            var errors = result.Succeeded
-               ? Array.Empty<string>()
-               : result.Errors.Select(x => x.Description).ToArray();
-            if (errors.Length > 0)
-            {
-                throw new BadRequestException("Error occurred when adding customer", errors);
+                var errors = result.Succeeded
+                   ? Array.Empty<string>()
+                   : result.Errors.Select(x => x.Description).ToArray();
+                if (errors.Length > 0)
+                {
+                    throw new BadRequestException("Error occurred when adding customer", errors);
+                }
+
+                await _identityManager.UserManager.AddToRoleAsync(user, "CUSTOMER");
+
+                var response = new UserResponseType
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Username = user.UserName,
+                    Email = user.Email
+                };
+
+                // register to main person and customer table
+                var customer = new Customer()
+                {
+                    Username = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DateOfBirth = request.Request.DateOfBirth,
+                    CreatedDate = DateTime.UtcNow,
+                    LastUpdatedDate = DateTime.UtcNow,
+                    RegistrationDate = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                _personRepository.Create(customer);
+                _customerRepository.Create(customer);
+
+                await _unitOfWork.Save(cancellationToken);
+
+                // update user table with the newly created personId
+                user.PersonId = customer.PersonId;
+                _userRepository.Update(user, cancellationToken);
+                await _unitOfWork.Save(cancellationToken);
+                scope.Complete();
+
+                return response;
             }
 
-            await _identityManager.UserManager.AddToRoleAsync(user, "CUSTOMER");
-
-            var response = new UserResponseType
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Email = user.Email
-            };
-
-            // register to main person and customer table
-            var customer = new Customer()
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DateOfBirth = request.Request.DateOfBirth,
-                CreatedDate = DateTime.UtcNow,
-                LastUpdatedDate = DateTime.UtcNow,
-                RegistrationDate = DateTime.UtcNow,
-                IsActive = true
-            };
-
-            _personRepository.Create(customer);
-            _customerRepository.Create(customer);
-
-            await _unitOfWork.Save(cancellationToken);
-
-            // update user table with the newly created personId
-            user.PersonId = customer.PersonId;
-            _userRepository.Update(user, cancellationToken);
-            await _unitOfWork.Save(cancellationToken);
-
-            return response;
         }
     }
 }

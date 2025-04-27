@@ -60,7 +60,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 appointmentRepository.Object,
                 customerRepository.Object);
 
-            var request = new GetAppointment(2, 2, false);
+            var request = new GetAppointment(2, 2);
 
             // act
             var response = await handler.Handle(request, default);
@@ -127,7 +127,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 appointmentRepository.Object,
                 customerRepository.Object);
 
-            var request = new GetAppointment(2, 2, false);
+            var request = new GetAppointment(2, 2);
 
             // act and assert
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(request, default));
@@ -172,7 +172,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 appointmentRepository.Object,
                 customerRepository.Object);
 
-            var request = new GetAppointment(2, 2, false);
+            var request = new GetAppointment(2, 2);
 
             // act and assert
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(request, default));
@@ -230,7 +230,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 appointmentRepository.Object,
                 customerRepository.Object);
 
-            var request = new GetAppointment(2, 2, false);
+            var request = new GetAppointment(2, 2);
 
             // act and assert
             var ex = await Assert.ThrowsAsync<UnauthorisedException>(() => handler.Handle(request, default));
