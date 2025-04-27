@@ -16,4 +16,10 @@
     <ProjectReference Include="..\QwiikAppointmentService.Domain\QwiikAppointmentService.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\AuthenticationUseCases\Login\" />
+    <Folder Include="UseCases\AuthenticationUseCases\Authenticate\" />
+    <Folder Include="UseCases\AuthenticationUseCases\Register\" />
+  </ItemGroup>
+
 </Project>
