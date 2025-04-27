@@ -24,7 +24,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
         public async Task<AppointmentResponseType> Handle(CreateAppointment request, CancellationToken cancellationToken)
         {
             // strip the second part if any
-            var appointmentStartTime = request.Request.AppointmentStart.Date + new TimeSpan(request.Request.AppointmentStart.TimeOfDay.Hours, request.Request.AppointmentStart.TimeOfDay.Minutes, 0);
+            var appointmentStartTime = request.Request.AppointmentStart.Date + new TimeSpan(request.Request.AppointmentStart.TimeOfDay.Hours, 0, 0);
             DateTime.SpecifyKind(appointmentStartTime, DateTimeKind.Utc);
 
             if (request.Request.AppointmentStart < DateTime.UtcNow)

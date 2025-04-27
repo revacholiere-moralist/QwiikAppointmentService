@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QwiikAppointmentService.Domain", "QwiikAppointmentService.Domain\QwiikAppointmentService.Domain.csproj", "{1914DED1-986B-4E88-8678-3566040ED397}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QwiikAppointmentService.EfPostgreSQL", "QwiikAppointmentService.EfPostgreSQL\QwiikAppointmentService.EfPostgreSQL.csproj", "{C928E68E-EAB5-4D01-BAC3-B8BB9BAD60E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QwiikAppointmentService.Test", "QwiikAppointmentService.Test\QwiikAppointmentService.Test.csproj", "{269169D6-4572-4676-B3DA-3ECC1F6A068C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{C928E68E-EAB5-4D01-BAC3-B8BB9BAD60E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C928E68E-EAB5-4D01-BAC3-B8BB9BAD60E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C928E68E-EAB5-4D01-BAC3-B8BB9BAD60E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{269169D6-4572-4676-B3DA-3ECC1F6A068C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{269169D6-4572-4676-B3DA-3ECC1F6A068C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{269169D6-4572-4676-B3DA-3ECC1F6A068C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{269169D6-4572-4676-B3DA-3ECC1F6A068C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{48BA5DB9-B632-4550-89B2-837D8B946581} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{1914DED1-986B-4E88-8678-3566040ED397} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{C928E68E-EAB5-4D01-BAC3-B8BB9BAD60E0} = {6A3B9F56-F7C6-41D3-922B-A2AC3BC5B71F}
+		{269169D6-4572-4676-B3DA-3ECC1F6A068C} = {80061EAA-1648-4339-9B07-08E83D67317B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {10B8975F-2EE6-4858-899C-05D5C62E8593}

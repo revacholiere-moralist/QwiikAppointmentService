@@ -43,14 +43,18 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Updat
                 throw new NotFoundException("Appointment not found.");
             }
 
+            if (existingAppointment.CustomerId != request.Request.CustomerId)
+            {
+                throw new UnauthorisedException("The customer does not have access to this appointment.");
+            }
+
             var otherExistingAppointment = await _appointmentRepository.GetAppointmentByStartTime(appointmentStartTime, cancellationToken);
             if (otherExistingAppointment is not null)
             {
                 throw new BadRequestException("Another appointment already exists on the requested time.");
             }
 
-            // valid to add appointment, proceed to update db
-
+            // valid to update appointment, proceed to update db
             // let's assume each appointment will take an hour slot
             var appointmentTimeEnd = appointmentStartTime.AddHours(1);
             DateTime.SpecifyKind(appointmentTimeEnd, DateTimeKind.Utc);

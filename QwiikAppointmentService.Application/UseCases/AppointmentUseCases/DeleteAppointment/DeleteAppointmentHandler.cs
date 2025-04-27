@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using QwiikAppointmentService.Application.Exceptions;
 using QwiikAppointmentService.Application.Repositories;
-using QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Common;
-using QwiikAppointmentService.Domain.Entities;
 
 namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.DeleteAppointment
 {
@@ -50,7 +48,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Delet
             catch (Exception ex)
             {
                 // TODO: Maybe add logging here
-                throw new InternalServerErrorException("Unable to create appointment.");
+                throw new InternalServerErrorException("Unable to delete appointment.");
             }
         }
     }

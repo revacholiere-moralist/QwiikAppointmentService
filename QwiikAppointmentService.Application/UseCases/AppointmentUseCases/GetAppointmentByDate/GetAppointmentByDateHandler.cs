@@ -28,7 +28,7 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.GetAp
                 var customer = await _customerRepository.Get(request.Request.CustomerId.Value, cancellationToken);
                 if (customer is null)
                 {
-                    throw new NotFoundException("Customer was not found.");
+                    throw new NotFoundException("Please enter a valid customer.");
                 }
 
                 appointments = appointments.Where(x => x.CustomerId == request.Request.CustomerId.Value).ToList();

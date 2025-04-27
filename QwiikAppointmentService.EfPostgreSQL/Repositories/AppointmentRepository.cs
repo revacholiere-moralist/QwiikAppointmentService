@@ -13,7 +13,7 @@ namespace QwiikAppointmentService.EfPostgreSQL.Repositories
         {
         }
 
-        public async Task<Appointment> GetAppointmentByStartTime(DateTime appointmentStartTime, CancellationToken cancellationToken)
+        public async Task<Appointment?> GetAppointmentByStartTime(DateTime appointmentStartTime, CancellationToken cancellationToken)
         {
             return await Context.Query<Appointment>()
                 .Where(x => x.AppointmentDateTimeStart <= appointmentStartTime
@@ -25,8 +25,8 @@ namespace QwiikAppointmentService.EfPostgreSQL.Repositories
         public async Task<List<Appointment>> GetAppointmentsByDate(DateTime dateFilterStart, DateTime dateFilterEnd, CancellationToken cancellationToken)
         {
             return await Context.Query<Appointment>()
-                .Where(x => x.IsActive && 
-                                (x.AppointmentDateTimeStart >= dateFilterStart && x.AppointmentDateTimeStart <= dateFilterEnd
+                .Where(x => x.IsActive 
+                            && (x.AppointmentDateTimeStart >= dateFilterStart && x.AppointmentDateTimeStart <= dateFilterEnd
                                 || x.AppointmentDateTimeEnd >= dateFilterStart && x.AppointmentDateTimeEnd <= dateFilterEnd))
                 .ToListAsync(cancellationToken);
         }
