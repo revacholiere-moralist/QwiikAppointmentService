@@ -53,14 +53,6 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Re
 
                 await _identityManager.UserManager.AddToRoleAsync(user, "CUSTOMER");
 
-                var response = new UserResponseType
-                {
-                    UserId = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Username = user.UserName,
-                    Email = user.Email
-                };
 
                 // register to main person and customer table
                 var customer = new Customer()
@@ -80,6 +72,15 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Re
                 _customerRepository.Create(customer);
 
                 await _unitOfWork.Save(cancellationToken);
+                var response = new UserResponseType
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    PersonId = customer.PersonId
+                };
 
                 // update user table with the newly created personId
                 user.PersonId = customer.PersonId;

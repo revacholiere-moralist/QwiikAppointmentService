@@ -105,6 +105,7 @@ namespace QwiikAppointmentService.Application.UseCases.AuthenticationUseCases.Lo
                 Type = "Bearer",
                 Username = user.UserName,
                 UserId = user.Id,
+                PersonId = user.PersonId
             };
         }
     }
