@@ -11,13 +11,17 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IPublicHolidayRepository _publicHolidayRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public CreateAppointmentHandler(IAppointmentRepository appointmentRepository, 
+        public CreateAppointmentHandler( IAppointmentRepository appointmentRepository, 
                                          ICustomerRepository customerRepository,
-                                         IUnitOfWork unitOfWork)
+                                         IPublicHolidayRepository publicHolidayRepository,
+                                         IUnitOfWork unitOfWork
+                                        )
         {
             _appointmentRepository = appointmentRepository;
             _customerRepository = customerRepository;
+            _publicHolidayRepository = publicHolidayRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -42,6 +46,13 @@ namespace QwiikAppointmentService.Application.UseCases.AppointmentUseCases.Creat
             if (existingAppointment is not null)
             {
                 throw new BadRequestException("Another appointment already exists on the requested time.");
+            }
+
+            // check to see if it's on public holiday
+            var publicHoliday = await _publicHolidayRepository.GetByTime(appointmentStartTime, cancellationToken);
+            if (publicHoliday is not null)
+            {
+                throw new BadRequestException("Cannot book an appointment on a public holiday.");
             }
 
             // valid to add appointment, proceed to insert to db

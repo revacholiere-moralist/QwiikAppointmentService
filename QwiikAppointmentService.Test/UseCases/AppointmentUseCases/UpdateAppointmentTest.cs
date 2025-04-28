@@ -17,13 +17,14 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
             DateTime.SpecifyKind(utcNow, DateTimeKind.Utc);
 
             #region Mocked Objects
-           
+
             var mockedCustomerResponse = new Customer()
             {
                 PersonId = 2,
@@ -68,7 +69,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             #endregion
 
             #region Setup
-            
+
             var appointmentResultQueue = new Queue<Appointment>();
             appointmentResultQueue.Enqueue(mockedAppointmentResponse);
             appointmentResultQueue.Enqueue(mockedAppointmentAfterUpdateResponse);
@@ -85,17 +86,22 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 method.Get(It.IsAny<int>(), default))
                     .ReturnsAsync(mockedCustomerResponse);
 
+            publicHolidayRepository.Setup(method =>
+                method.GetByTime(It.IsAny<DateTime>(), default))
+                    .ReturnsAsync((PublicHoliday?)null);
+
 
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
             {
                 CustomerId = 2,
                 AppointmentId = 2,
-                AppointmentStart = (DateTime.UtcNow.Date + DateTime.UtcNow.TimeOfDay).AddHours(2)
+                AppointmentStart = utcNow.AddHours(2)
             };
             #endregion
 
@@ -123,6 +129,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
@@ -179,13 +186,14 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
             {
                 CustomerId = 2,
                 AppointmentId = 2,
-                AppointmentStart = (DateTime.UtcNow.Date + DateTime.UtcNow.TimeOfDay).AddHours(2)
+                AppointmentStart = utcNow.AddHours(2)
             };
             #endregion
 
@@ -204,6 +212,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
@@ -270,13 +279,14 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
             {
                 CustomerId = 2,
                 AppointmentId = 2,
-                AppointmentStart = (DateTime.UtcNow.Date + DateTime.UtcNow.TimeOfDay).AddHours(-1)
+                AppointmentStart = utcNow.AddHours(-1)
             };
 
 
@@ -294,6 +304,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             appointmentRepository.Setup(method =>
@@ -309,6 +320,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
@@ -333,6 +345,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
@@ -394,13 +407,14 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
             {
                 CustomerId = 2,
                 AppointmentId = 2,
-                AppointmentStart = (DateTime.UtcNow.Date + DateTime.UtcNow.TimeOfDay).AddHours(1)
+                AppointmentStart = utcNow.AddHours(1)
             };
 
 
@@ -418,6 +432,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             // arrange
             var appointmentRepository = new Mock<IAppointmentRepository>();
             var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
@@ -466,6 +481,7 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
             var handler = new UpdateAppointmentHandler(
                 appointmentRepository.Object,
                 customerRepository.Object,
+                publicHolidayRepository.Object,
                 unitOfWork.Object);
 
             var requestObject = new UpdateAppointmentRequestType
@@ -473,6 +489,96 @@ namespace QwiikAppointmentService.Test.UseCases.AppointmentUseCases
                 CustomerId = 2,
                 AppointmentId = 2,
                 AppointmentStart = (DateTime.UtcNow.Date + DateTime.UtcNow.TimeOfDay).AddHours(1)
+            };
+
+
+            var request = new UpdateAppointment(requestObject);
+            var exceptionMessage = "Appointment not found.";
+
+            // act and assert
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(request, default));
+            Assert.Equal(exceptionMessage, ex.Message);
+        }
+
+        [Fact]
+        public async Task UpdateAppointment_ShouldFail_PublicHoliday()
+        {
+            // arrange
+            var appointmentRepository = new Mock<IAppointmentRepository>();
+            var customerRepository = new Mock<ICustomerRepository>();
+            var publicHolidayRepository = new Mock<IPublicHolidayRepository>();
+            var unitOfWork = new Mock<IUnitOfWork>();
+
+            var utcNow = (DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.TimeOfDay.Hours, 0, 0));
+            DateTime.SpecifyKind(utcNow, DateTimeKind.Utc);
+            var mockedCustomerResponse = new Customer()
+            {
+                PersonId = 2,
+                Username = "CustomerTest",
+                Email = "customer@test.com",
+                FirstName = "Customer",
+                LastName = "Test",
+                DateOfBirth = new DateTime(2015, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                CreatedById = 1,
+                LastUpdatedById = 1,
+                CreatedDate = new DateTime(2025, 4, 27, 0, 0, 0, DateTimeKind.Utc),
+                LastUpdatedDate = new DateTime(2025, 4, 27, 0, 0, 0, DateTimeKind.Utc),
+                IsActive = true,
+                RegistrationDate = new DateTime(2025, 4, 27, 0, 0, 0, DateTimeKind.Utc)
+            };
+
+            var mockedExistingAppointmentResponse = new Appointment()
+            {
+                AppointmentId = 3,
+                CustomerId = 2,
+                AppointmentDateTimeStart = utcNow.AddHours(1),
+                AppointmentDateTimeEnd = utcNow.AddHours(2),
+                CreatedById = 2,
+                LastUpdatedById = 2,
+                CreatedDate = new DateTime(2025, 4, 26, 2, 0, 0, DateTimeKind.Utc),
+                LastUpdatedDate = new DateTime(2025, 4, 26, 2, 0, 0, DateTimeKind.Utc),
+                IsActive = true
+            };
+
+            var mockedPublicHoliday = new PublicHoliday()
+            {
+                PublicHolidayId = 0,
+                HolidayStart = utcNow.AddHours(-12),
+                HolidayEnd = utcNow.AddHours(12),
+                CreatedById = 2,
+                LastUpdatedById = 2,
+                CreatedDate = new DateTime(2025, 4, 26, 2, 0, 0, DateTimeKind.Utc),
+                LastUpdatedDate = new DateTime(2025, 4, 26, 2, 0, 0, DateTimeKind.Utc),
+                IsActive = true
+            };
+
+            appointmentRepository.Setup(method =>
+                method.GetAppointmentByStartTime(It.IsAny<DateTime>(), default))
+                    .ReturnsAsync(mockedExistingAppointmentResponse);
+
+            customerRepository.Setup(method =>
+                method.Get(It.IsAny<int>(), default))
+                    .ReturnsAsync(mockedCustomerResponse);
+
+            appointmentRepository.Setup(method =>
+                method.Get(2, default))
+                    .ReturnsAsync((Appointment?)null);
+
+            publicHolidayRepository.Setup(method =>
+                method.GetByTime(utcNow.AddHours(1), default))
+                    .ReturnsAsync(mockedPublicHoliday);
+
+            var handler = new UpdateAppointmentHandler(
+                appointmentRepository.Object,
+                customerRepository.Object,
+                publicHolidayRepository.Object,
+                unitOfWork.Object);
+
+            var requestObject = new UpdateAppointmentRequestType
+            {
+                CustomerId = 2,
+                AppointmentId = 2,
+                AppointmentStart = utcNow.AddHours(1)
             };
 
 
